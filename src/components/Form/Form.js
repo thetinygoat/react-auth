@@ -11,7 +11,10 @@ export default class Form extends Component {
 		signupData: {
 			email: '',
 			password: ''
-		}
+		},
+		idToken: null,
+		localId: null,
+		loading: false
 	};
 	handleViewSwitch = () => {
 		this.setState(state => {
@@ -71,7 +74,19 @@ export default class Form extends Component {
 				signupForm
 			)
 			.then(res => {
-				console.log(res.data);
+				this.setState(
+					{
+						...this.state,
+						signinData: { ...this.state.signinData },
+						signupData: { ...this.state.signupData },
+						idToken: res.data.idToken,
+						localId: res.data.localId,
+						loading: false
+					},
+					() => {
+						console.log(this.state);
+					}
+				);
 			})
 			.catch(err => {
 				console.log(err);
@@ -79,20 +94,35 @@ export default class Form extends Component {
 	};
 	handleSignIn = e => {
 		e.preventDefault();
+		this.setState(state => {
+			return {
+				loading: !state.loading
+			};
+		});
 		const signupForm = {
 			email: this.state.signinData.email.toString(),
 			password: this.state.signinData.password.toString(),
 			returnSecureToken: true
 		};
-		console.log(this.state.signupData.email);
-		console.log(this.state.signupData.password);
 		axios
 			.post(
 				'https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyDwAJ6UXhUDgi_yV63CEz_Z7-TDm-8bWj8',
 				signupForm
 			)
 			.then(res => {
-				console.log(res.data);
+				this.setState(
+					{
+						...this.state,
+						signinData: { ...this.state.signinData },
+						signupData: { ...this.state.signupData },
+						idToken: res.data.idToken,
+						localId: res.data.localId,
+						loading: false
+					},
+					() => {
+						console.log(this.state);
+					}
+				);
 			})
 			.catch(err => {
 				console.log(err.message);
@@ -143,7 +173,7 @@ export default class Form extends Component {
 		}
 		return (
 			<div>
-				{formView}
+				{this.state.loading ? 'loading...' : formView}
 				<button onClick={this.handleViewSwitch}>
 					{!this.state.signinView ? ' switch to signin' : 'switch to signup'}
 				</button>
