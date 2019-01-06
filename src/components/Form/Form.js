@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import { Redirect } from 'react-router-dom';
 
 export default class Form extends Component {
 	state = {
@@ -171,8 +172,13 @@ export default class Form extends Component {
 				</div>
 			);
 		}
+		let redirect = null;
+		if (this.state.idToken !== null) {
+			redirect = <Redirect to="/secret" />;
+		}
 		return (
 			<div>
+				{redirect}
 				{this.state.loading ? 'loading...' : formView}
 				<button onClick={this.handleViewSwitch}>
 					{!this.state.signinView ? ' switch to signin' : 'switch to signup'}
