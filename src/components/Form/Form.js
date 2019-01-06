@@ -77,12 +77,33 @@ export default class Form extends Component {
 				console.log(err);
 			});
 	};
+	handleSignIn = e => {
+		e.preventDefault();
+		const signupForm = {
+			email: this.state.signinData.email.toString(),
+			password: this.state.signinData.password.toString(),
+			returnSecureToken: true
+		};
+		console.log(this.state.signupData.email);
+		console.log(this.state.signupData.password);
+		axios
+			.post(
+				'https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyDwAJ6UXhUDgi_yV63CEz_Z7-TDm-8bWj8',
+				signupForm
+			)
+			.then(res => {
+				console.log(res.data);
+			})
+			.catch(err => {
+				console.log(err.message);
+			});
+	};
 	render() {
 		let formView = null;
 		if (this.state.signinView) {
 			formView = (
 				<div>
-					<form>
+					<form onSubmit={this.handleSignIn}>
 						<input
 							type="text"
 							placeholder="eMail"
